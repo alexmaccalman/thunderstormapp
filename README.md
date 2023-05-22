@@ -1,7 +1,11 @@
-# thunderstormapp
+# Thunderstorm App
+
+Below are instruction on how I built an Azure Function time trigger python app to trigger every morning and check the weather open api and send a SMS text if the forecast expects thunderstorms. 
+
+## Instructions
 
 Create resoruce group and stroage account.  
-Retrieve Storage Connection String and store in Azure KEy Vault
+Retrieve Storage Connection String and store in Azure Key Vault
 ```
 DefaultEndpointsProtocol=https;AccountName=<account-name>;AccountKey=<account-key>;EndpointSuffix=core.windows.net
 ```  
@@ -72,10 +76,47 @@ def main(mytimer: func.TimerRequest) -> None:
     # Your weather checking and SMS sending code here
 
 ```  
-Replace "API_KEY", "ACCOUNT_SID", "AUTH_TOKEN", and "STORAGE_CONNECTION_STRING" with the names of your secrets in Azure Key Vault.
+Replace "API_KEY", "ACCOUNT_SID", "AUTH_TOKEN", and "STORAGE_CONNECTION_STRING" with the names of your secrets in Azure Key Vault.  
+
+
+
+
+In the left-hand menu, click on "Configuration" under the "Settings" section.  
+
+In the "Application settings" section, click on the "New application setting" button.  
+
+In the "Name" field, enter WEBSITE_TIME_ZONE.  
+
+In the "Value" field, enter the desired time zone value. For example, if you want to set the time zone to Eastern Standard Time (EST), you can enter Eastern Standard Time as the value.  
+
+Click the "OK" button to save the application setting.  
+
+After saving the application setting, restart your Function App to apply the changes. You can do this by clicking on the "Overview" option in the left-hand menu and then clicking on the "Restart" button at the top of the page.  
+
+By adding the WEBSITE_TIME_ZONE application setting with the desired time zone value, you ensure that your Function App uses the specified time zone for all time-related operations, including the trigger schedule specified in the binding configuration.  
+
+Inside the function.json add the following binding:  
+```
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "name": "mytimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 0 8 * * *",
+      "timeZone": "Eastern Standard Time" 
+    }
+  ]
+}
+```  
+
 Step 6: Deploy the Azure Function
 
-Open the Azure Functions extension in Visual Studio Code.
-Click on the "Deploy to Function App" button in the Azure Functions sidebar.
-Follow the prompts to select your subscription, resource group, and function app.
-Once the deployment is successful, the Azure Function will be deployed and triggered based on the schedule specified in
+Open the Azure Functions extension in Visual Studio Code.  
+Right Click the function folder and click on the "Deploy to Function App" button in the Azure Functions sidebar.  
+Follow the prompts to select your subscription, resource group, and function app.  
+Once the deployment is successful, the Azure Function will be deployed and triggered based on the schedule specified in binding.
+
+In the portal, go to the Azure Function under "Identity" under settings and turn on the System Assigned Identify.  
+Then go to the Azure Key Vault and assign the system identify called thunderappfunction as a contributer.  
