@@ -49,7 +49,7 @@ def main(mytimer: func.TimerRequest) -> None:
     weather_slice = weather_data["hourly"][:12]
     for hour_data in weather_slice:
         condition_code = hour_data["weather"][0]["id"]
-        if int(condition_code) < 300: # less than 300 means thunderstorm
+        if int(condition_code) < 300: # less than 300 means thunderstorm 
             will_rain = True
             break
 
