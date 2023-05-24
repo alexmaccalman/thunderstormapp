@@ -18,11 +18,6 @@ def main(mytimer: func.TimerRequest) -> None:
     if mytimer.past_due:
         logging.info('The timer is past due!')
 
-    # Check if the current time is 08:00 Eastern Time
-    # current_time = datetime.datetime.now(pytz.timezone('US/Eastern')).strftime('%H:%M')
-    # if current_time != '12:59':
-    #     logging.info('The function is triggered, but it is not 08:00 Eastern Time yet.')
-    #     return
 
     # Retrieve secrets from Azure Key Vault
     keyvault_url = "https://resumekeyvaultadm.vault.azure.net/"
